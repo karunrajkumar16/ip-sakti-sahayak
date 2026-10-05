@@ -18,17 +18,17 @@ export default function GovernmentNavbar() {
     { to: '/', label: 'Home', icon: Home },
     { to: '/assistant', label: 'IPR Assistant', icon: Bot },
     { to: '/traditional-knowledge', label: 'Traditional Knowledge', icon: BookMarked },
-    { to: '/regulatory-guidance', label: 'Product & Regulatory', icon: FileCheck2 },
+    { to: '/regulatory-guidance', label: 'Product Regulatory', icon: FileCheck2 },
     { to: '/biodiversity-abs', label: 'Biodiversity / ABS', icon: Leaf },
     { to: '/sources', label: 'Knowledge Sources', icon: Database },
-    { to: '/search', label: 'Search Portal', icon: Search },
+    { to: '/search', label: 'Search Repository', icon: Search },
     { to: '/about', label: 'About Sahayak', icon: Info },
     { to: '/help', label: 'Help / FAQ', icon: HelpCircle },
-    { to: '/admin', label: 'Admin Dashboard', icon: LayoutDashboard }
+    { to: '/admin', label: 'Admin', icon: LayoutDashboard }
   ];
 
   return (
-    <nav className="gov-navbar sticky top-0 z-40">
+    <nav className="gov-navbar sticky top-0 z-40 bg-[#002b49] border-b-2 border-slate-900 shadow-md">
       <div className="max-w-7xl mx-auto flex items-center overflow-x-auto no-scrollbar">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -38,7 +38,7 @@ export default function GovernmentNavbar() {
               to={item.to}
               end={item.to === '/'}
               className={({ isActive }) =>
-                `gov-nav-item whitespace-nowrap ${isActive ? 'active' : ''}`
+                `gov-nav-item whitespace-nowrap text-xs font-semibold ${isActive ? 'active' : ''}`
               }
             >
               <Icon className="w-4 h-4 text-amber-400" />

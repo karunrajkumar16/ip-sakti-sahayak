@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, FileText, Phone, Mail, ShieldAlert } from 'lucide-react';
+import { HelpCircle, Phone, Mail } from 'lucide-react';
 import FAQ from '../components/government/FAQ';
 
 export default function Help() {
@@ -22,67 +22,54 @@ export default function Help() {
     },
     {
       question: 'How does multilingual voice and text search work?',
-      answer: 'Sahayak integrates BHASHINI ASR (Automatic Speech Recognition) and IndicTrans2 NMT (Neural Machine Translation) pipelines to support voice input and query resolution across 11 Indian languages including Hindi, Marathi, Gujarati, Tamil, Telugu, and Bengali.'
-    },
-    {
-      question: 'What is Retrieval-Augmented Generation (RAG)?',
-      answer: 'RAG is an AI architecture that retrieves relevant statutory clauses and TKDL records from a vector database (Qdrant/ChromaDB) before sending them to the Large Language Model (LLM). This ensures every answer is grounded in real, verifiable government documents rather than generated assumptions.'
-    },
-    {
-      question: 'What is Traditional Knowledge (TK) under Indian Patent Law?',
-      answer: 'Traditional Knowledge refers to indigenous knowledge, innovations, and practices of traditional communities. Under Section 3(p) of the Indian Patents Act, 1970, an invention which in effect is traditional knowledge or an aggregation of known properties of known components is not patentable.'
-    },
-    {
-      question: 'What is Access and Benefit Sharing (ABS)?',
-      answer: 'ABS is a framework under the Biological Diversity Act 2002 and Nagoya Protocol mandating that commercial or research users of Indian biological resources share benefits (royalties) with local Biodiversity Management Committees (BMCs) and indigenous guardians.'
-    },
-    {
-      question: 'When should I escalate a query to a human expert?',
-      answer: 'You should escalate to an expert if the AI assistant response returns LOW CONFIDENCE, or if your query involves a novel patent application, commercial international export contracts, or complex bio-assay synergism proof.'
+      answer: 'Sahayak integrates BHASHINI ASR and IndicTrans2 NMT pipelines to support voice input and query resolution across Indian languages including Hindi, Marathi, Gujarati, Tamil, Telugu, and Bengali.'
     }
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-slate-900 text-white p-4 border-b-4 border-amber-600">
-        <div className="flex items-center gap-2">
-          <HelpCircle className="w-6 h-6 text-amber-400" />
-          <h1 className="text-xl font-bold tracking-wide">
-            HELP CENTER & FREQUENTLY ASKED QUESTIONS (FAQ)
-          </h1>
+      <div className="bg-[#002147] text-white p-4 border-b-4 border-amber-600 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <HelpCircle className="w-5 h-5 text-amber-400" />
+            <h1 className="text-lg font-bold tracking-wide">
+              HELP CENTER & FREQUENTLY ASKED QUESTIONS (FAQ)
+            </h1>
+          </div>
+          <p className="text-xs text-slate-300 mt-1 max-w-xl">
+            Find answers to common queries about Ayurveda IPR, TKDL prior art search, NBA ABS compliance, and Sahayak portal usage.
+          </p>
         </div>
-        <p className="text-xs text-slate-300 mt-1">
-          Find answers to common questions about Ayurveda IPR, TKDL prior art search, NBA ABS compliance, and Sahayak portal usage.
-        </p>
+
+        <div className="bg-slate-900 border border-slate-700 px-3 py-1.5 text-xs text-amber-400 font-bold shrink-0">
+          SUPPORT & HELPDESK
+        </div>
       </div>
 
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
-          <div className="gov-box border-t-4 border-t-slate-900">
-            <div className="gov-box-header">
-              <span>FREQUENTLY ASKED QUESTIONS</span>
-            </div>
-            <div className="p-4">
-              <FAQ items={faqList} />
-            </div>
+          <div className="gov-box p-6 bg-white border-t-4 border-t-[#002147]">
+            <h2 className="font-bold text-slate-900 text-sm border-b border-slate-300 pb-3 mb-4 uppercase">
+              Frequently Asked Questions
+            </h2>
+            <FAQ items={faqList} />
           </div>
         </div>
 
         <div className="lg:col-span-4 space-y-4">
-          <div className="gov-box bg-slate-900 text-white p-4 space-y-3 text-xs">
-            <h3 className="font-bold text-amber-400 text-sm flex items-center gap-1.5">
+          <div className="gov-box p-5 bg-[#002147] text-white border-t-4 border-t-amber-500 space-y-3 text-xs">
+            <h3 className="font-bold text-amber-400 text-sm flex items-center gap-1.5 uppercase">
               <Phone className="w-4 h-4 text-amber-400" />
-              OFFICIAL HELP DESK
+              Official Support Helpdesk
             </h3>
-            <p className="text-slate-300 leading-relaxed">
+            <p className="text-slate-300 leading-relaxed text-[11px]">
               For technical queries regarding the SIH 2026 prototype or expert panel escalation:
             </p>
-            <div className="bg-slate-800 p-2.5 border border-slate-700 space-y-1 text-[11px]">
-              <p><strong>Email:</strong> helpdesk@ipsakti-sahayak.gov.in</p>
-              <p><strong>Toll Free:</strong> 1800-11-AYUSH (29874)</p>
-              <p><strong>Nodal Team:</strong> Kaizzen (SIH 2026)</p>
+            <div className="bg-slate-900 p-3 border border-slate-700 space-y-1 text-[11px]">
+              <p className="flex items-center gap-2"><Mail className="w-3.5 h-3.5 text-amber-400" /> helpdesk@ipsakti-sahayak.gov.in</p>
+              <p className="flex items-center gap-2"><Phone className="w-3.5 h-3.5 text-amber-400" /> 1800-11-AYUSH (Toll Free)</p>
             </div>
           </div>
         </div>

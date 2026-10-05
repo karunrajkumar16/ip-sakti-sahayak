@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Send,
@@ -7,10 +7,10 @@ import {
   FileText,
   HelpCircle,
   RefreshCw,
-  Search,
   BookOpen,
   Scale,
-  ExternalLink
+  ExternalLink,
+  ArrowRight
 } from 'lucide-react';
 import ChatMessage from '../components/assistant/ChatMessage';
 import SourcePanel from '../components/assistant/SourcePanel';
@@ -31,14 +31,7 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
   const [showExpertEscalation, setShowExpertEscalation] = useState(false);
   const [escalationInitialQuery, setEscalationInitialQuery] = useState('');
 
-  // Run query if passed via URL
-  useEffect(() => {
-    if (initialQuery && conversations.length === 0) {
-      handleQuerySubmit(initialQuery);
-    }
-  }, [initialQuery]);
-
-  const handleQuerySubmit = async (queryText) => {
+  const handleQuerySubmit = useCallback(async (queryText) => {
     if (!queryText.trim()) return;
     setLoading(true);
 
@@ -56,7 +49,17 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentLanguage, selectedJurisdiction]);
+
+  const hasRunInitialRef = React.useRef(false);
+
+  // Run query if passed via URL
+  useEffect(() => {
+    if (initialQuery && !hasRunInitialRef.current) {
+      hasRunInitialRef.current = true;
+      handleQuerySubmit(initialQuery);
+    }
+  }, [initialQuery, handleQuerySubmit]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -68,69 +71,85 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
     setShowExpertEscalation(true);
   };
 
-  // Extract all retrieved sources across conversations for the Right Side Evidence Panel
   const allRetrievedSources = conversations.flatMap(c => c.botResponse?.sources || []);
+
+  const QUICK_SCENARIOS = [
+    { title: "Section 3(p) Patent Exclusions", text: "Can this Ayurvedic formulation be patented under Section 3(p) of the Patents Act?" },
+    { title: "TKDL Prior Art Check", text: "Is Ashwagandha and Guduchi stress relief formulation already recorded in TKDL?" },
+    { title: "AYUSH Rule 158B Licensing", text: "What are the regulatory licensing steps for Ayurvedic Proprietary Medicine under Rule 158B?" },
+    { title: "NBA ABS Royalty Export Rate", text: "What is the NBA Access and Benefit Sharing (ABS) royalty rate for exporting commercial herbs?" }
+  ];
 
   return (
     <div className="space-y-6">
       {/* Title Header */}
-      <div className="bg-slate-900 text-white p-4 border-b-4 border-amber-600 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#002147] text-white p-4 border-b-4 border-amber-600 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-6 h-6 text-amber-400" />
-            <h1 className="text-xl font-bold tracking-wide">
-              INTELLECTUAL PROPERTY RIGHTS ASSISTANT
+            <ShieldCheck className="w-5 h-5 text-amber-400" />
+            <h1 className="text-lg font-bold tracking-wide">
+              INTELLECTUAL PROPERTY & REGULATORY SAHAYAK AI
             </h1>
           </div>
-          <p className="text-xs text-slate-300 mt-0.5">
-            Ask questions about patents, Section 3(p) exclusions, trademarks, copyright, trade secrets and related Ayurvedic IP matters.
+          <p className="text-xs text-slate-300 mt-1 max-w-xl">
+            Click any instant scenario below or type your question to receive source-grounded statutory decision support.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-bold text-slate-300">Jurisdiction:</span>
+        <div className="flex items-center gap-2 text-xs bg-slate-900 border border-slate-700 px-3 py-1.5 font-bold">
+          <span className="text-slate-300">Jurisdiction:</span>
           <select
             value={selectedJurisdiction}
             onChange={(e) => setSelectedJurisdiction(e.target.value)}
-            className="bg-slate-800 text-amber-300 font-bold border border-slate-600 px-2 py-1 text-xs focus:outline-none"
+            className="bg-slate-900 text-amber-400 font-bold text-xs border border-slate-700 px-2 py-0.5 focus:outline-none"
           >
-            <option value="India">🇮🇳 India (IP India / Patents Act 1970)</option>
-            <option value="WIPO">🌐 International (WIPO / PCT Framework)</option>
-            <option value="USA">🇺🇸 USA (USPTO / DSHEA Compliance)</option>
-            <option value="EU">🇪🇺 Europe (EPO / THMPD Rules)</option>
+            <option value="India">India (Patents Act 1970)</option>
+            <option value="WIPO">International (WIPO Framework)</option>
+            <option value="USA">USA (USPTO / DSHEA)</option>
+            <option value="EU">Europe (EPO / THMPD)</option>
           </select>
         </div>
       </div>
 
-      {/* Main Split Grid: LEFT = Conversation Area, RIGHT = Sources & Evidence */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* LEFT / MAIN: Conversation Area (8 cols) */}
-        <div className="lg:col-span-8 space-y-4">
-          {/* Conversation History */}
-          <div className="min-h-[400px]">
-            {conversations.length === 0 && !loading && (
-              <div className="gov-box text-center py-12 space-y-3">
-                <Scale className="w-12 h-12 text-slate-400 mx-auto" />
-                <h3 className="font-bold text-slate-900 text-base">
-                  Ready to Assist with Ayurvedic IPR Queries
-                </h3>
-                <p className="text-xs text-slate-600 max-w-md mx-auto">
-                  Type your formulation details or legal question below. Sahayak will search IP India Patent Guidelines, TKDL prior art, and India Code statutes.
-                </p>
+      {/* 1-Tap Quick Scenario Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {QUICK_SCENARIOS.map((sc, i) => (
+          <button
+            key={i}
+            onClick={() => handleQuerySubmit(sc.text)}
+            className="p-4 bg-white border-2 border-slate-300 hover:border-[#002147] text-left transition-all group flex flex-col justify-between"
+          >
+            <div>
+              <div className="text-[10px] font-bold text-amber-800 bg-amber-100 px-1.5 py-0.5 inline-block mb-1 border border-amber-300 uppercase">
+                1-CLICK SCENARIO
+              </div>
+              <div className="text-xs font-bold text-slate-900 group-hover:text-[#002147] transition-colors">
+                {sc.title}
+              </div>
+            </div>
+            <div className="mt-3 text-[11px] text-slate-600 flex items-center justify-between font-bold">
+              <span>Run Scenario</span>
+              <ArrowRight className="w-3.5 h-3.5 text-amber-700 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </button>
+        ))}
+      </div>
 
-                <div className="pt-4 flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
-                  <button
-                    onClick={() => handleQuerySubmit("Can this Ayurvedic formulation be patented?")}
-                    className="bg-slate-100 hover:bg-slate-200 border border-slate-300 px-3 py-1.5 text-xs text-slate-800 font-medium text-left"
-                  >
-                    "Can this Ayurvedic formulation be patented?"
-                  </button>
-                  <button
-                    onClick={() => handleQuerySubmit("Is Ashwagandha and Guduchi stress formulation already in TKDL?")}
-                    className="bg-slate-100 hover:bg-slate-200 border border-slate-300 px-3 py-1.5 text-xs text-slate-800 font-medium text-left"
-                  >
-                    "Is Ashwagandha and Guduchi stress formulation already in TKDL?"
-                  </button>
+      {/* Main Split Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* LEFT: Conversation Area */}
+        <div className="lg:col-span-8 space-y-4">
+          <div className="min-h-[380px]">
+            {conversations.length === 0 && !loading && (
+              <div className="gov-box p-8 text-center space-y-3 bg-white">
+                <Scale className="w-10 h-10 text-slate-400 mx-auto" />
+                <div>
+                  <h3 className="font-bold text-slate-900 text-base">
+                    Sahayak AI Assistant Ready
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-1 max-w-md mx-auto leading-relaxed">
+                    Click any 1-click option above, use the voice assistant, or type your question below.
+                  </p>
                 </div>
               </div>
             )}
@@ -145,22 +164,22 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
             ))}
 
             {loading && (
-              <div className="gov-box border-2 border-slate-700 p-6 text-center space-y-3">
+              <div className="gov-box border-2 border-slate-700 p-8 text-center space-y-3 bg-white">
                 <RefreshCw className="w-8 h-8 text-amber-600 animate-spin mx-auto" />
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">
-                    SEARCHING OFFICIAL KNOWLEDGE SOURCES & STATUTES...
+                  <h4 className="font-bold text-slate-900 text-sm uppercase">
+                    Retrieving statutory citations & TKDL records...
                   </h4>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Connecting to Qdrant Vector Index • IP India Guidelines • TKDL Formulations • India Code
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Connecting to IP India Guidelines • CSIR TKDL • India Code
                   </p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Input Box Bar */}
-          <div className="gov-box border-t-4 border-t-slate-900">
+          {/* Search Box Bar */}
+          <div className="gov-box border-t-4 border-t-[#002147] p-4 bg-white">
             <form onSubmit={handleFormSubmit} className="space-y-3">
               <label className="block text-xs font-bold text-slate-900 uppercase">
                 ENTER YOUR IPR OR LEGAL REGULATORY QUESTION:
@@ -171,8 +190,8 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
                   rows={3}
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
-                  placeholder="e.g. What are the requirements to prove synergistic effect under Section 3(e) for a polyherbal formulation?"
-                  className="w-full bg-slate-50 border-2 border-slate-400 p-3 text-xs text-slate-900 focus:bg-white focus:border-slate-900 focus:outline-none"
+                  placeholder="Ask a question or click a 1-tap option above..."
+                  className="w-full bg-slate-50 border-2 border-slate-400 p-3 text-xs text-slate-900 font-medium focus:bg-white focus:border-slate-900 focus:outline-none"
                 />
               </div>
 
@@ -186,19 +205,21 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
                   <span>BHASHINI Voice Input</span>
                 </button>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setConversations([])}
-                    className="text-xs text-slate-500 hover:text-slate-800 underline px-2"
-                  >
-                    Clear History
-                  </button>
+                <div className="flex items-center gap-3">
+                  {conversations.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setConversations([])}
+                      className="text-xs text-slate-500 hover:text-slate-800 underline font-medium"
+                    >
+                      Clear History
+                    </button>
+                  )}
 
                   <button
                     type="submit"
                     disabled={loading || !inputQuery.trim()}
-                    className="gov-btn bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-5 py-2 shadow-xs"
+                    className="gov-btn bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-6 py-2.5 shadow-xs disabled:opacity-50"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Submit Question</span>
@@ -209,33 +230,33 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
           </div>
         </div>
 
-        {/* RIGHT: Sources & Evidence Panel (4 cols) */}
+        {/* RIGHT: Sources & Evidence Panel */}
         <div className="lg:col-span-4 space-y-4">
           <div className="gov-box gov-box-green">
             <div className="gov-box-header">
               <span className="flex items-center gap-1.5">
                 <BookOpen className="w-4 h-4 text-emerald-800" />
-                SOURCES & EVIDENCE PANEL
+                STATUTORY EVIDENCE CITATIONS
               </span>
-              <span className="bg-emerald-100 text-emerald-900 font-mono text-[10px] font-bold px-1.5">
+              <span className="badge-high">
                 {allRetrievedSources.length} CITATIONS
               </span>
             </div>
 
-            <div className="p-3 text-xs space-y-3 max-h-[600px] overflow-y-auto">
+            <div className="p-3 text-xs space-y-3 max-h-[500px] overflow-y-auto">
               {allRetrievedSources.length === 0 ? (
-                <div className="text-slate-500 text-center py-8 text-xs">
+                <div className="text-slate-500 text-center py-10 text-xs">
                   <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                  <p>No query executed yet.</p>
+                  <p>No active citations yet.</p>
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Retrieved statutory sources and TKDL citations will appear here in document view format.
+                    Citations will appear automatically as queries run.
                   </p>
                 </div>
               ) : (
                 allRetrievedSources.map((src, i) => (
-                  <div key={i} className="bg-slate-50 border border-slate-300 p-3 text-xs space-y-1">
+                  <div key={i} className="bg-slate-50 border border-slate-300 p-3 text-xs space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="bg-slate-900 text-amber-400 font-mono font-bold text-[10px] px-1.5 py-0.5">
+                      <span className="bg-[#002147] text-amber-400 font-mono font-bold text-[10px] px-1.5 py-0.5">
                         {src.sourceName}
                       </span>
                       <span className="text-[10px] text-slate-500">{src.indexedDate}</span>
@@ -245,17 +266,14 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
                       {src.documentTitle}
                     </h5>
                     <p className="text-slate-600 text-[11px]">
-                      <strong>Authority:</strong> {src.authority}
-                    </p>
-                    <p className="text-blue-900 font-mono text-[11px]">
-                      <strong>Provision:</strong> {src.section}
+                      {src.authority} • <span className="text-slate-900 font-mono">{src.section}</span>
                     </p>
 
                     <button
                       onClick={() => setActiveSourceModal(src)}
                       className="mt-2 text-[11px] font-bold text-amber-700 hover:text-amber-900 underline flex items-center gap-1"
                     >
-                      <span>View Full Source Record</span>
+                      <span>View Full Record</span>
                       <ExternalLink className="w-3 h-3" />
                     </button>
                   </div>
@@ -264,14 +282,14 @@ export default function Assistant({ onOpenVoiceModal, currentLanguage }) {
             </div>
           </div>
 
-          {/* Quick Expert Escalation Trigger Box */}
-          <div className="gov-box bg-amber-50/50 border-amber-300 p-4 text-xs space-y-2">
+          {/* Expert Escalation Box */}
+          <div className="gov-box gov-box-saffron bg-amber-50/50 p-4 text-xs space-y-2">
             <h4 className="font-bold text-amber-950 uppercase text-xs flex items-center gap-1.5">
               <HelpCircle className="w-4 h-4 text-amber-700" />
               REQUIRE FORMAL LEGAL OPINION?
             </h4>
             <p className="text-amber-900 text-[11px] leading-relaxed">
-              If your formulation contains complex novelty aspects or low AI confidence, submit your query to the official Patent Office Expert Panel.
+              Submit your formulation details directly to the Patent Office Expert Panel.
             </p>
             <button
               onClick={() => handleEscalateTrigger(inputQuery)}

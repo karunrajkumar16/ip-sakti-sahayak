@@ -6,25 +6,25 @@ const PATH_NAME_MAP = {
   'assistant': 'IPR Assistant',
   'traditional-knowledge': 'Traditional Knowledge Search',
   'regulatory-guidance': 'Product & Regulatory Guidance',
-  'biodiversity-abs': 'Biodiversity & Access and Benefit Sharing (ABS)',
+  'biodiversity-abs': 'Biodiversity & ABS',
   'sources': 'Knowledge Sources Directory',
-  'search': 'Unified Document Search Portal',
-  'about': 'About IP-SAKTI Sahayak',
+  'search': 'Unified Search Portal',
+  'about': 'About',
   'help': 'Help & FAQ',
-  'admin': 'Admin & Knowledge Management'
+  'admin': 'Admin Dashboard'
 };
 
 export default function Breadcrumbs() {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(x => x);
 
-  if (pathnames.length === 0) return null; // Home page doesn't need breadcrumbs
+  if (pathnames.length === 0) return null;
 
   return (
-    <div className="gov-breadcrumb">
-      <div className="max-w-7xl mx-auto flex items-center gap-1.5 flex-wrap">
-        <Link to="/" className="hover:underline flex items-center gap-1 text-slate-700 font-medium">
-          <Home className="w-3.5 h-3.5 text-slate-600" />
+    <div className="gov-breadcrumb py-2 bg-white/60 border-b border-slate-200/80 backdrop-blur-xs">
+      <div className="max-w-7xl mx-auto px-4 flex items-center gap-1.5 flex-wrap text-xs">
+        <Link to="/" className="hover:text-amber-600 flex items-center gap-1 text-slate-500 font-medium transition-colors">
+          <Home className="w-3.5 h-3.5" />
           <span>Home</span>
         </Link>
 
@@ -35,11 +35,11 @@ export default function Breadcrumbs() {
 
           return (
             <React.Fragment key={to}>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
               {isLast ? (
-                <span className="font-bold text-slate-900">{name}</span>
+                <span className="font-semibold text-slate-800">{name}</span>
               ) : (
-                <Link to={to} className="hover:underline text-slate-700 font-medium">
+                <Link to={to} className="hover:text-amber-600 text-slate-500 font-medium transition-colors">
                   {name}
                 </Link>
               )}

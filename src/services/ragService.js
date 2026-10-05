@@ -11,7 +11,7 @@ export const ragService = {
     const lowerQ = question.toLowerCase();
 
     // Matching logic to return rich source-grounded answers
-    let matchedConv = INITIAL_MOCK_CONVERSATIONS.find((c) =>
+    let matchedConv = INITIAL_MOCK_CONVERSATIONS.find(() =>
       lowerQ.includes('patent') || lowerQ.includes('formulation') || lowerQ.includes('ashwagandha')
     );
 

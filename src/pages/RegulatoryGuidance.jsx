@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileCheck2, ShieldAlert, CheckCircle2, ArrowRight, Building2, AlertCircle, FileText, Info } from 'lucide-react';
+import { FileCheck2, CheckCircle2 } from 'lucide-react';
 import { MOCK_CLASSIFICATION_RULES, REGULATORY_AUTHORITIES } from '../data/regulations';
 
 export default function RegulatoryGuidance() {
@@ -21,42 +21,47 @@ export default function RegulatoryGuidance() {
     setLoading(true);
 
     setTimeout(() => {
-      // Determine category based on ingredients/intended use
       const resultCategory = formData.ingredients.toLowerCase().includes('syrup') || formData.ingredients.toLowerCase().includes('ashwagandha')
-        ? MOCK_CLASSIFICATION_RULES[0] // Ayurvedic Proprietary Medicine
-        : MOCK_CLASSIFICATION_RULES[2]; // Ayush Aahar
+        ? MOCK_CLASSIFICATION_RULES[0]
+        : MOCK_CLASSIFICATION_RULES[2];
 
       setClassificationResult(resultCategory);
       setLoading(false);
-    }, 700);
+    }, 600);
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="bg-slate-900 text-white p-4 border-b-4 border-amber-600">
-        <div className="flex items-center gap-2">
-          <FileCheck2 className="w-6 h-6 text-amber-400" />
-          <h1 className="text-xl font-bold tracking-wide">
-            PRODUCT CLASSIFICATION & REGULATORY GUIDANCE PORTAL
-          </h1>
+      <div className="bg-[#002147] text-white p-4 border-b-4 border-amber-600 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <FileCheck2 className="w-5 h-5 text-amber-400" />
+            <h1 className="text-lg font-bold tracking-wide">
+              PRODUCT CLASSIFICATION & REGULATORY GUIDANCE PORTAL
+            </h1>
+          </div>
+          <p className="text-xs text-slate-300 mt-1 max-w-xl">
+            Classify herbal products under AYUSH Rule 158B, FSSAI Ayush Aahar, or CDSCO rules for licensing and IPR pathways.
+          </p>
         </div>
-        <p className="text-xs text-slate-300 mt-1">
-          Classify herbal and Ayurvedic products under AYUSH Rule 158B, FSSAI Ayush Aahar, or CDSCO rules to identify licensing requirements and IPR pathways.
-        </p>
+
+        <div className="bg-slate-900 border border-slate-700 px-3 py-1.5 text-xs text-amber-400 font-bold shrink-0">
+          AYUSH RULE 158B & FSSAI COMPLIANT
+        </div>
       </div>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Form Column (5 cols) */}
         <div className="lg:col-span-5">
-          <div className="gov-box border-t-4 border-t-slate-900">
-            <div className="gov-box-header">
-              <span>ENTER PRODUCT SPECIFICATION DETAILS</span>
-              <span className="text-xs font-normal text-slate-600">Formulation Matrix</span>
+          <div className="gov-box p-5 bg-white border-t-4 border-t-[#002147]">
+            <div className="gov-box-header mb-4">
+              <span>ENTER PRODUCT SPECIFICATIONS</span>
+              <span className="text-xs font-normal text-slate-600">Formulation Data</span>
             </div>
 
-            <form onSubmit={handleClassify} className="p-4 space-y-3 text-xs">
+            <form onSubmit={handleClassify} className="space-y-3 text-xs">
               <div>
                 <label className="block font-bold text-slate-900 mb-1">
                   Product Name <span className="text-red-600">*</span>
@@ -66,173 +71,150 @@ export default function RegulatoryGuidance() {
                   required
                   value={formData.productName}
                   onChange={(e) => setFormData({ ...formData, productName: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-400 p-2 text-xs focus:bg-white focus:outline-none"
+                  className="w-full bg-slate-50 border-2 border-slate-400 p-2.5 text-xs font-medium focus:bg-white focus:border-slate-900 focus:outline-none"
                 />
               </div>
 
               <div>
                 <label className="block font-bold text-slate-900 mb-1">
-                  Product Ingredients & Concentrations <span className="text-red-600">*</span>
+                  Ingredients & Concentrations <span className="text-red-600">*</span>
                 </label>
                 <textarea
                   rows={3}
                   required
                   value={formData.ingredients}
                   onChange={(e) => setFormData({ ...formData, ingredients: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-400 p-2 text-xs focus:bg-white focus:outline-none"
+                  className="w-full bg-slate-50 border-2 border-slate-400 p-2.5 text-xs font-medium focus:bg-white focus:border-slate-900 focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-slate-900 mb-1">
-                    Dosage Form <span className="text-red-600">*</span>
+                    Dosage Form
                   </label>
                   <select
                     value={formData.form}
                     onChange={(e) => setFormData({ ...formData, form: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-400 p-2 text-xs focus:bg-white focus:outline-none"
+                    className="w-full bg-slate-50 border-2 border-slate-400 p-2.5 text-xs font-medium focus:bg-white focus:border-slate-900 focus:outline-none"
                   >
                     <option value="Syrup / Liquid Oral">Syrup / Liquid Oral</option>
                     <option value="Tablet / Capsule">Tablet / Capsule</option>
                     <option value="Churna / Powder">Churna / Powder</option>
                     <option value="Oil / Ointment">Oil / Ointment</option>
-                    <option value="Herbal Extract / Resin">Herbal Extract / Resin</option>
                   </select>
                 </div>
 
                 <div>
                   <label className="block font-bold text-slate-900 mb-1">
-                    Target Market <span className="text-red-600">*</span>
+                    Target Market
                   </label>
                   <select
                     value={formData.targetMarket}
                     onChange={(e) => setFormData({ ...formData, targetMarket: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-400 p-2 text-xs focus:bg-white focus:outline-none"
+                    className="w-full bg-slate-50 border-2 border-slate-400 p-2.5 text-xs font-medium focus:bg-white focus:border-slate-900 focus:outline-none"
                   >
-                    <option value="Domestic Only">Domestic (India)</option>
-                    <option value="Export Only">Export Only</option>
                     <option value="Domestic & Export">Domestic & Export</option>
+                    <option value="Domestic India Only">Domestic India Only</option>
+                    <option value="Export Only">Export Only</option>
                   </select>
                 </div>
               </div>
 
               <div>
                 <label className="block font-bold text-slate-900 mb-1">
-                  Intended Therapeutic / Health Claim <span className="text-red-600">*</span>
+                  Intended Therapeutic Claim / Use
                 </label>
                 <input
                   type="text"
-                  required
                   value={formData.intendedUse}
                   onChange={(e) => setFormData({ ...formData, intendedUse: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-400 p-2 text-xs focus:bg-white focus:outline-none"
+                  className="w-full bg-slate-50 border-2 border-slate-400 p-2.5 text-xs font-medium focus:bg-white focus:border-slate-900 focus:outline-none"
                 />
               </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="gov-btn bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs w-full py-2.5 justify-center shadow-xs mt-2"
-              >
-                {loading ? 'Evaluating Regulatory Matrix...' : 'Classify Product & Generate Matrix'}
-              </button>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="gov-btn bg-[#002147] hover:bg-[#0d3b66] text-amber-400 w-full text-xs py-2.5 justify-center font-bold"
+                >
+                  {loading ? 'Evaluating Regulatory Matrix...' : 'Run Product Classification'}
+                </button>
+              </div>
             </form>
           </div>
         </div>
 
         {/* Results Column (7 cols) */}
-        <div className="lg:col-span-7">
-          {!classificationResult ? (
-            <div className="gov-box text-center py-16 space-y-3">
-              <Building2 className="w-12 h-12 text-slate-400 mx-auto" />
-              <h3 className="font-bold text-slate-900 text-base">
-                Product Regulatory Evaluation
-              </h3>
-              <p className="text-xs text-slate-600 max-w-md mx-auto">
-                Fill in the product specification form on the left and click "Classify Product" to view statutory licensing categories, applicable authorities, and required documentation.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {/* Classification Result Card */}
-              <div className="gov-box border-t-4 border-t-emerald-700 bg-white">
-                <div className="gov-box-header bg-emerald-50">
-                  <span className="text-emerald-950 font-bold">CLASSIFICATION DETERMINATION RESULT</span>
-                  <span className="bg-emerald-200 text-emerald-900 text-[10px] font-bold px-2 py-0.5 border border-emerald-400">
-                    PRELIMINARY GUIDANCE
+        <div className="lg:col-span-7 space-y-4">
+          {classificationResult ? (
+            <div className="gov-box p-5 bg-white border-t-4 border-t-emerald-700 space-y-4">
+              <div className="gov-box-header">
+                <div>
+                  <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 border border-amber-300">
+                    CLASSIFICATION RESULT
                   </span>
+                  <h3 className="text-base font-black text-slate-900 mt-1">
+                    {classificationResult.categoryName}
+                  </h3>
+                </div>
+                <span className="badge-high">
+                  {classificationResult.governingAct}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                <div className="p-3 bg-slate-50 border border-slate-300 space-y-1">
+                  <span className="font-bold text-slate-900 block">Licensing Authority:</span>
+                  <p className="text-slate-700">{classificationResult.licensingAuthority}</p>
                 </div>
 
-                <div className="p-4 space-y-4 text-xs">
-                  <div className="bg-emerald-50 border border-emerald-300 p-3">
-                    <span className="text-[10px] font-bold text-emerald-800 uppercase block">Determined Category:</span>
-                    <h3 className="text-lg font-bold text-slate-900 mt-0.5">
-                      {classificationResult.category}
-                    </h3>
-                    <p className="text-xs text-slate-700 mt-1">
-                      <strong>Governing Act:</strong> {classificationResult.governingAct}
-                    </p>
-                    <p className="text-xs text-slate-700">
-                      <strong>Primary Authority:</strong> {classificationResult.authority}
-                    </p>
-                  </div>
-
-                  {/* 6 Structured Regulatory Steps */}
-                  <div className="space-y-3">
-                    <h4 className="font-bold text-slate-900 uppercase border-b border-slate-300 pb-1 flex items-center gap-1.5">
-                      <FileText className="w-4 h-4 text-amber-600" />
-                      STRUCTURED REGULATORY & COMPLIANCE ROADMAP (6 STEPS)
-                    </h4>
-
-                    {/* Step 1 */}
-                    <div className="bg-slate-50 border-l-4 border-blue-900 p-3">
-                      <span className="font-bold text-blue-900 uppercase">1. PRODUCT CLASSIFICATION</span>
-                      <p className="mt-1 text-slate-800">{classificationResult.criteria}</p>
-                    </div>
-
-                    {/* Step 2 */}
-                    <div className="bg-slate-50 border-l-4 border-slate-800 p-3">
-                      <span className="font-bold text-slate-900 uppercase">2. APPLICABLE REGULATIONS</span>
-                      <p className="mt-1 text-slate-800">Rule 158B of Drugs & Cosmetics Rules 1945; Schedule T GMP standards; Ayush Pharmacopoeia standards.</p>
-                    </div>
-
-                    {/* Step 3 */}
-                    <div className="bg-slate-50 border-l-4 border-amber-600 p-3">
-                      <span className="font-bold text-amber-900 uppercase">3. REQUIRED DOCUMENTATION</span>
-                      <ul className="list-disc pl-4 mt-1 space-y-0.5 text-slate-800">
-                        {classificationResult.requirements.map((req, idx) => (
-                          <li key={idx}>{req}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Step 4 */}
-                    <div className="bg-slate-50 border-l-4 border-emerald-700 p-3">
-                      <span className="font-bold text-emerald-900 uppercase">4. MANDATORY APPROVALS</span>
-                      <p className="mt-1 text-slate-800">Form 25D License from State Licensing Authority; Free Sale Certificate for exports from CDSCO.</p>
-                    </div>
-
-                    {/* Step 5 */}
-                    <div className="bg-slate-50 border-l-4 border-purple-800 p-3">
-                      <span className="font-bold text-purple-900 uppercase">5. INTELLECTUAL PROPERTY CONSIDERATIONS</span>
-                      <p className="mt-1 text-slate-800">{classificationResult.ipConsiderations}</p>
-                    </div>
-
-                    {/* Step 6 */}
-                    <div className="bg-slate-50 border-l-4 border-amber-700 p-3">
-                      <span className="font-bold text-amber-950 uppercase">6. BIODIVERSITY & ABS CONSIDERATIONS</span>
-                      <p className="mt-1 text-slate-800">{classificationResult.absConsiderations}</p>
-                    </div>
-                  </div>
-
-                  <div className="gov-alert gov-alert-warning text-[11px] mb-0">
-                    <strong>PRELIMINARY GUIDANCE LABEL:</strong> This classification is based on automated rules of the Ministry of AYUSH & FSSAI gazette notifications. Submit your final dossier to the State Licensing Authority for formal license issuance.
-                  </div>
+                <div className="p-3 bg-slate-50 border border-slate-300 space-y-1">
+                  <span className="font-bold text-slate-900 block">Mandatory Data Required:</span>
+                  <p className="text-slate-700">{classificationResult.safetyTrialRequirements}</p>
                 </div>
               </div>
+
+              <div className="p-4 bg-amber-50 border border-amber-300 text-xs space-y-1">
+                <span className="font-bold text-amber-950 block uppercase">IPR & Patent Exclusions Pathway:</span>
+                <p className="text-amber-900 font-medium leading-relaxed">{classificationResult.iprPathway}</p>
+              </div>
+
+              <div className="border-t border-slate-300 pt-3">
+                <span className="font-bold text-slate-900 text-xs block mb-2 uppercase">Required Statutory Checklists:</span>
+                <ul className="space-y-1 text-xs text-slate-700">
+                  {classificationResult.checklistItems?.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="gov-box p-12 text-center bg-white space-y-3">
+              <FileCheck2 className="w-10 h-10 text-slate-400 mx-auto" />
+              <h3 className="font-bold text-slate-900 text-sm">Regulatory Classification Matrix Ready</h3>
+              <p className="text-xs text-slate-600 max-w-sm mx-auto">
+                Submit product details on the left to evaluate licensing requirements under State Licensing Authorities & FSSAI.
+              </p>
             </div>
           )}
+
+          {/* Authorities Overview */}
+          <div className="gov-box p-4 bg-white">
+            <h4 className="font-bold text-slate-900 text-xs mb-3 uppercase">Statutory Regulatory Authorities</h4>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              {REGULATORY_AUTHORITIES.slice(0, 4).map((auth) => (
+                <div key={auth.code} className="bg-slate-50 p-2.5 border border-slate-300">
+                  <span className="font-bold text-slate-900 block">{auth.code}</span>
+                  <span className="text-slate-600 text-[11px] line-clamp-1">{auth.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

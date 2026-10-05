@@ -38,6 +38,7 @@ export default function ExpertEscalationForm({ initialQuery = '', onClose }) {
       });
       setSubmittedResult(res);
     } catch (err) {
+      console.error(err);
       alert('Error submitting request.');
     } finally {
       setLoading(false);

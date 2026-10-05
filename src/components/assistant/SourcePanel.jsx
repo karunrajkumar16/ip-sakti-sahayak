@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ExternalLink, ShieldCheck, FileText, Calendar, Building, Info } from 'lucide-react';
+import { X, ExternalLink, ShieldCheck, FileText } from 'lucide-react';
 
 export default function SourcePanel({ source, onClose }) {
   if (!source) return null;

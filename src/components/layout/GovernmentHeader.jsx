@@ -1,64 +1,59 @@
 import React from 'react';
-import { Shield, BookOpen, Award, ExternalLink, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-export default function GovernmentHeader({ onOpenHelpModal }) {
+export default function GovernmentHeader() {
   return (
-    <header className="gov-header px-4 py-3 border-b-2 border-slate-900 bg-white">
+    <header className="gov-header py-3.5 px-4 bg-white border-b-4 border-[#002147]">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Left Branding */}
+        {/* Left: Official GOI Emblem & Ministry Branding */}
         <div className="flex items-center gap-4">
-          {/* Government Emblem Placeholder Icon */}
-          <div className="w-14 h-14 bg-slate-900 text-amber-400 flex flex-col items-center justify-center border-2 border-amber-500 rounded-xs shadow-xs">
-            <span className="text-[10px] font-bold text-center leading-tight tracking-wider text-amber-300 uppercase">
-              सत्यमेव जयते
-            </span>
-            <Shield className="w-6 h-6 my-0.5 text-amber-400" />
-            <span className="text-[8px] tracking-widest text-slate-300">GOVT</span>
+          {/* Satyameva Jayate Lion Capital Emblem SVG */}
+          <div className="flex flex-col items-center justify-center p-1 bg-amber-50/50 border border-amber-300 shrink-0">
+            <svg viewBox="0 0 100 110" className="w-11 h-14 text-amber-900" fill="currentColor">
+              <path d="M50 5 L68 25 L62 32 L62 70 L72 76 L72 84 L28 84 L28 76 L38 70 L38 32 L32 25 Z" fill="#78350f" />
+              <circle cx="50" cy="50" r="11" fill="#ffffff" stroke="#78350f" strokeWidth="2" />
+              <path d="M50 39 L50 61 M39 50 L61 50 M42 42 L58 58 M42 58 L58 42" stroke="#78350f" strokeWidth="1.5" />
+              <rect x="22" y="86" width="56" height="7" rx="0" fill="#78350f" />
+              <text x="50" y="103" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#78350f">सत्यमेव जयते</text>
+            </svg>
           </div>
 
           <div>
-            <div className="flex items-baseline gap-2">
-              <Link to="/" className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-1 hover:text-blue-900">
-                IP-SAKTI <span className="text-amber-600 font-bold text-lg">| सहायक</span>
+            <div className="text-[11px] font-bold text-slate-900 tracking-wide uppercase">
+              भारत सरकार | GOVERNMENT OF INDIA
+            </div>
+            <div className="text-xs font-bold text-amber-700">
+              आयुष मंत्रालय एवं वाणिज्य और उद्योग मंत्रालय (DPIIT)
+            </div>
+
+            <div className="mt-1 flex items-baseline gap-2">
+              <Link to="/" className="text-2xl font-black text-slate-900 tracking-tight hover:text-amber-700 transition-colors">
+                IP-SAKTI <span className="text-amber-600 font-bold">| सहायक</span>
               </Link>
-              <span className="bg-slate-200 text-slate-800 text-[10px] font-bold px-1.5 py-0.5 border border-slate-400">
-                PROTOTYPE — SIH 2026
+              <span className="bg-slate-200 text-slate-800 text-[10px] font-bold px-2 py-0.5 border border-slate-400">
+                OFFICIAL PORTAL
               </span>
             </div>
+
             <p className="text-xs font-semibold text-slate-700 mt-0.5">
-              Source-Grounded AI Knowledge & Regulatory Assistance Platform for Ayurveda & IPR
-            </p>
-            <p className="text-[11px] text-slate-500">
-              Smart India Hackathon 2026 • Problem Statement SIH26045 • Team Kaizzen
+              National Digital Knowledge & Regulatory Assistance Platform for Ayurveda & IPR
             </p>
           </div>
         </div>
 
-        {/* Right Badges / Quick Action */}
-        <div className="flex items-center gap-3">
-          <div className="hidden lg:flex items-center gap-3 text-xs text-slate-600 bg-slate-50 p-2 border border-slate-300">
-            <div className="flex items-center gap-1.5 border-r border-slate-300 pr-3">
-              <BookOpen className="w-4 h-4 text-emerald-700" />
-              <div>
-                <span className="font-bold block text-slate-900 leading-tight">TKDL & IP India</span>
-                <span className="text-[10px]">Official Indexing</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Award className="w-4 h-4 text-blue-800" />
-              <div>
-                <span className="font-bold block text-slate-900 leading-tight">NBA & AYUSH</span>
-                <span className="text-[10px]">ABS Compliance</span>
-              </div>
-            </div>
+        {/* Right: Sharp Action Button */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="hidden lg:flex flex-col text-right border-r border-slate-300 pr-4">
+            <span className="text-xs font-bold text-slate-900">DPIIT • CSIR TKDL • NBA</span>
+            <span className="text-[11px] text-slate-600">Source-Grounded AI Matrix</span>
           </div>
 
           <Link
             to="/assistant"
-            className="gov-btn bg-amber-600 border-amber-700 hover:bg-amber-700 text-white text-xs px-3.5 py-2 font-bold flex items-center gap-1.5 shadow-xs"
+            className="gov-btn bg-amber-600 hover:bg-amber-700 border-amber-700 text-white text-xs px-4 py-2.5 font-bold shadow-xs flex items-center gap-2"
           >
-            <Search className="w-3.5 h-3.5" />
+            <Search className="w-4 h-4 text-white" />
             <span>Launch Sahayak AI</span>
           </Link>
         </div>

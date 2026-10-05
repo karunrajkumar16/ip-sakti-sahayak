@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, ShieldAlert, Bot, FileText, CheckSquare, ExternalLink, HelpCircle } from 'lucide-react';
+import { User, ShieldAlert, Bot, CheckSquare, HelpCircle } from 'lucide-react';
 import ConfidenceBadge from './ConfidenceBadge';
 import SourceCitation from './SourceCitation';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExternalLink, FileText, ShieldCheck, BookOpen } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 export default function SourceCitation({ index, source, onViewSource }) {
   return (
